@@ -13,7 +13,7 @@ ArvanCloud IP list
 [ArvanCloud CDN Edge Servers IPs](https://www.arvancloud.com/fa/ips.txt)
 
 ## How to use - Easy to use
-Just run bash script as a root user. Script create a new file that contains Arvancloud IP's and a add create a cron job to update ip's every day.
+Just run bash script as a root user. Script create a new file that contains Arvancloud IP's and create a cron job to update ip's every day.
 ```console
 sudo sh ar-ngxrealip.sh
 ```
