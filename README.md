@@ -1,5 +1,4 @@
-# Get real visitor IP address with 
-ArvanCloud User Real IP with Nginx and ArvanCloud
+# Get real visitor IP address with Nginx and ArvanCloud
 
 # Brief
 Show Real IPs instead of Arvan IPs in Nginx
