@@ -12,15 +12,57 @@ ArvanCloud IP list
 
 ## Useful Link
 [ArvanCloud CDN Edge Servers IPs](https://www.arvancloud.com/fa/ips.txt)
-[CloudFlare Similar tool](https://github.com/ergin/nginx-cloudflare-real-ip)
 
-## Terms and Conditions
-* All projects received to ArvanCloud will be reviewed, and the price will be paid to the first approved project.
-* All projects have to have test and execution document.
-* The project doer has to solve issues and apply required changes for 6 months after approval of the project.
-* General changes or changing programming language in each project has to be approved by ArvanCloud.
-* In case more than one project is approved by ArvanCLoud, the project fee will be equally divided between winning projects.
-* In the evaluation and code reviews stages of a project, no new request for the same project will be accepted. In case the reviewed project fails to pass the quality assessments, the project will be reactivated.
-* If projects require any update or edit, merge requests will be accepted in GitHub after reassessment and reapproval.
-* Approved projects will be forked in GitHub, and ArvanCloud will star them.
-* GitHub name and address of the approved project doer will be published alongside the project. 
+## How to use - Easy to use
+Just run bash script as a root user. Script create a new file that contains Arvancloud IP's and a add create a cron job to update ip's every day.
+```console
+sudo sh ar-ngxrealip.sh
+```
+
+```bash
+#!/bin/bash
+
+if [[ $EUID -ne 0 ]]; then
+	echo -e "Sorry, you need to run this as root"
+	exit 1
+fi
+
+responseCode=$(curl --head --write-out '%{http_code}' --silent --output /dev/null https://www.arvancloud.com/fa/ips.txt)
+
+# do only, if adresse is reachable
+if [ "$responseCode" == "200" ] ; then
+
+    echo "Extraction of ArvanCloud IPs started ...";
+    echo '';
+
+    ARVAN_FILE_PATH=/etc/nginx/conf.d/arvan.conf
+
+    echo "#ARVANCLOUD" > $ARVAN_FILE_PATH;
+    echo "" >> $ARVAN_FILE_PATH;
+
+    for i in `curl https://www.arvancloud.com/fa/ips.txt`; do
+            echo "set_real_ip_from $i;" >> $ARVAN_FILE_PATH;
+    done
+
+    echo "" >> $ARVAN_FILE_PATH;
+    echo "real_ip_header AR_REAL_IP;" >> $ARVAN_FILE_PATH;
+
+    #test configuration and reload nginx
+    nginx -t && systemctl reload nginx
+
+    # Run script every dat at 1 AM
+    updateArvanIps="0 1 * * * /usr/local/bin/ar-ngxrealip.sh"
+
+    (crontab -l ; echo "$updateArvanIps" ) | crontab -
+
+    cp ar-ngxrealip.sh /usr/local/bin
+
+    sed '30,42d' ar-ngxrealip.sh >> /usr/local/bin/ar-ngxrealip.sh
+
+    chmod +x /usr/local/bin/ar-ngxrealip.sh
+
+else
+    echo "ArvanCloud IPs is not accessible!";
+
+fi
+```
