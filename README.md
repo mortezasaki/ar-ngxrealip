@@ -15,7 +15,7 @@ ArvanCloud IP list
 ## How to use - Easy to use
 Just run bash script as a root user. Script create a new file that contains Arvancloud IP's and create a cron job to update ip's every day.
 ```console
-sudo sh ar-ngxrealip.sh
+sudo bash ar-ngxrealip.sh
 ```
 
 ```bash
