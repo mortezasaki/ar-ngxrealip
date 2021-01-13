@@ -33,9 +33,7 @@ if [ "$responseCode" == "200" ] ; then
 
     (crontab -l ; echo "$updateArvanIps" ) | crontab -
 
-    cp ar-ngxrealip.sh /usr/local/bin
-
-    sed '30,42d' ar-ngxrealip.sh >> /usr/local/bin/ar-ngxrealip.sh
+    sed '30,49d' ar-ngxrealip.sh >> /usr/local/bin/ar-ngxrealip.sh
 
     chmod +x /usr/local/bin/ar-ngxrealip.sh
 
